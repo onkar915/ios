@@ -224,6 +224,7 @@ onMounted(() => {
 });
 
 // Update saveTodos to handle completion status
+// In your saveTodos function
 const saveTodos = async () => {
   const todosJson = JSON.stringify(todos.value.map(todo => ({
     text: todo.text,
@@ -235,20 +236,17 @@ const saveTodos = async () => {
   // Web fallback
   localStorage.setItem('todos', todosJson);
   
-  // Native Android - Update widget data
   if (Capacitor.isNativePlatform()) {
     try {
-      // Update widget through AndroidBridge if available
-      if ((window as any).AndroidBridge) {
-        (window as any).AndroidBridge.updateWidgetData(todosJson);
-      }
-      // Also update through WidgetBridge if available (for backward compatibility)
-      else if ((window as any).WidgetBridge) {
-        (window as any).WidgetBridge.updateWidgetData(todosJson);
-      }
-      // Fallback to Capacitor plugin
-      else {
+      if (Capacitor.getPlatform() === 'android') {
+        // Android implementation
+        if ((window as any).AndroidBridge) {
+          (window as any).AndroidBridge.updateWidgetData(todosJson);
+        }
+      } else if (Capacitor.getPlatform() === 'ios') {
+        // iOS implementation
         await TodoWidget.saveTodos({ todos: todosJson });
+        await TodoWidget.updateWidget();
       }
     } catch (e) {
       console.error('Widget update failed:', e);
