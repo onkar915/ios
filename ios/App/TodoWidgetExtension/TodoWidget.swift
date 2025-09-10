@@ -3,11 +3,18 @@ import SwiftUI
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), todos: [])
+        SimpleEntry(date: Date(), todos: [
+            TodoItem(text: "Aspirin", completed: false, dateTime: "2024-01-15T10:00:00Z", id: 1),
+            TodoItem(text: "Vitamin C", completed: true, dateTime: "2024-01-15T12:00:00Z", id: 2)
+        ])
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), todos: loadTodoData())
+        let entry = SimpleEntry(date: Date(), todos: [
+            TodoItem(text: "Aspirin", completed: false, dateTime: "2024-01-15T10:00:00Z", id: 1),
+            TodoItem(text: "Vitamin C", completed: true, dateTime: "2024-01-15T12:00:00Z", id: 2),
+            TodoItem(text: "Pain Relief", completed: false, dateTime: "2024-01-15T15:00:00Z", id: 3)
+        ])
         completion(entry)
     }
 
@@ -18,19 +25,12 @@ struct Provider: TimelineProvider {
     }
     
     private func loadTodoData() -> [TodoItem] {
-        if let sharedDefaults = UserDefaults(suiteName: "group.io.ionic.starter.widget"),
-           let todosData = sharedDefaults.string(forKey: "todos"),
-           let data = todosData.data(using: .utf8) {
-            
-            do {
-                let todoItems = try JSONDecoder().decode([TodoItem].self, from: data)
-                return todoItems
-            } catch {
-                print("Error decoding todos: \(error)")
-                return []
-            }
-        }
-        return []
+        // For simulator testing, return hardcoded data
+        return [
+            TodoItem(text: "Aspirin", completed: false, dateTime: "2024-01-15T10:00:00Z", id: 1),
+            TodoItem(text: "Vitamin C", completed: true, dateTime: "2024-01-15T12:00:00Z", id: 2),
+            TodoItem(text: "Pain Relief", completed: false, dateTime: "2024-01-15T15:00:00Z", id: 3)
+        ]
     }
 }
 
@@ -54,6 +54,7 @@ struct TodoWidgetEntryView: View {
             Text("Medicines")
                 .font(.headline)
                 .bold()
+                .foregroundColor(.blue)
             
             if entry.todos.isEmpty {
                 Text("No medicines scheduled")
@@ -64,6 +65,7 @@ struct TodoWidgetEntryView: View {
                     HStack(spacing: 8) {
                         Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
                             .foregroundColor(todo.completed ? .green : .gray)
+                            .font(.system(size: 14))
                         
                         VStack(alignment: .leading, spacing: 2) {
                             Text(todo.text)
@@ -77,14 +79,20 @@ struct TodoWidgetEntryView: View {
                                     .foregroundColor(.gray)
                             }
                         }
+                        
+                        Spacer()
                     }
                 }
             }
+            
+            Spacer()
+            
+            Text("Last updated: \(timeFormatter.string(from: Date()))")
+                .font(.system(size: 8))
+                .foregroundColor(.gray)
         }
         .padding()
-        .containerBackground(for: .widget) {
-            Color(.systemBackground)
-        }
+        .background(Color(.systemBackground))
     }
 }
 
@@ -95,9 +103,15 @@ private let dateFormatter: DateFormatter = {
     return formatter
 }()
 
+private let timeFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.timeStyle = .medium
+    return formatter
+}()
+
 private let isoDateFormatter: ISO8601DateFormatter = {
     let formatter = ISO8601DateFormatter()
-    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    formatter.formatOptions = [.withInternetDateTime]
     return formatter
 }()
 
@@ -113,3 +127,28 @@ struct TodoWidget: Widget {
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
+
+#if DEBUG
+struct TodoWidget_Previews: PreviewProvider {
+    static var previews: some View {
+        TodoWidgetEntryView(entry: SimpleEntry(
+            date: Date(),
+            todos: [
+                TodoItem(text: "Aspirin", completed: false, dateTime: "2024-01-15T10:00:00Z", id: 1),
+                TodoItem(text: "Vitamin C", completed: true, dateTime: "2024-01-15T12:00:00Z", id: 2),
+                TodoItem(text: "Pain Relief", completed: false, dateTime: "2024-01-15T15:00:00Z", id: 3)
+            ]
+        ))
+        .previewContext(WidgetPreviewContext(family: .systemSmall))
+        
+        TodoWidgetEntryView(entry: SimpleEntry(
+            date: Date(),
+            todos: [
+                TodoItem(text: "Aspirin", completed: false, dateTime: "2024-01-15T10:00:00Z", id: 1),
+                TodoItem(text: "Vitamin C", completed: true, dateTime: "2024-01-15T12:00:00Z", id: 2)
+            ]
+        ))
+        .previewContext(WidgetPreviewContext(family: .systemMedium))
+    }
+}
+#endif
