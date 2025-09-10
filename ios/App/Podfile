@@ -24,6 +24,9 @@ target 'App' do
   # Add your Pods here
 end
 
+target 'TodoWidgetExtension' do
+  # Widget extension pods if needed
+end
 post_install do |installer|
   assertDeploymentTarget(installer)
 end
