@@ -21,6 +21,7 @@ end
 
 target 'App' do
   capacitor_pods
+  pod 'WidgetKit', '~> 1.0' # Add to main target
   # ... other pods if any 
 end
 
