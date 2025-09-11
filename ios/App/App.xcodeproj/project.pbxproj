@@ -142,7 +142,17 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
+    {
+        target = 504EC3031FED79650016851F /* App */;
+        targetProxy = ADB71C6828A1C1D200B4A3C1 /* PBXContainerItemProxy */ = {
+    isa = PBXContainerItemProxy;
+    containerPortal = 504EC2FC1FED79650016851F /* Project object */;
+    proxyType = 1;
+    remoteGlobalIDString = 504EC3031FED79650016851F;
+    remoteInfo = App;
+};
+    },
+);
 			name = WidgetExtension;
 			productName = WidgetExtension;
 			productReference = ADB71C6428A1C1D200B4A3C1 /* WidgetExtension.appex */;
