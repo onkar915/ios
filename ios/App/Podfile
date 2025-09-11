@@ -22,13 +22,6 @@ end
 target 'App' do
   capacitor_pods
   # ... other pods if any 
-  
-  # Widget target - must be nested inside the host app target
-  target 'WidgetExtension' do
-    platform :ios, '14.0'
-    inherit! :search_paths # This is key for app extensions
-    pod 'WidgetKit', '~> 1.0'
-  end
 end
 
 post_install do |installer|
