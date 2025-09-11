@@ -23,12 +23,7 @@ target 'App' do
   capacitor_pods
   # ... other pods if any 
 end
- # Widget target
-  target 'WidgetExtension' do
-    platform :ios, '14.0'
-    use_frameworks!
-    pod 'WidgetKit', '~> 1.0'
-  end
+
 post_install do |installer|
   assertDeploymentTarget(installer)
 end
