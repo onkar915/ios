@@ -19,7 +19,7 @@ def capacitor_pods
   pod 'CordovaPlugins', :path => '../capacitor-cordova-ios-plugins'
 end
 
-target'widget'
+target 'App' do
   capacitor_pods
   pod 'WidgetKit', '~> 1.0' # Add to main target
   # ... other pods if any 
