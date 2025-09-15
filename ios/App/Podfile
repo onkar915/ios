@@ -19,7 +19,8 @@ def capacitor_pods
   pod 'CordovaPlugins', :path => '../capacitor-cordova-ios-plugins'
 end
 
-target 'Widget'
+# CORRECTED LINE: Added 'do' after target definition
+target 'App' do
   capacitor_pods
   pod 'WidgetKit', '~> 1.0' # Add to main target
   # ... other pods if any 
