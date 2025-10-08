@@ -1,7 +1,0 @@
-{
-  "name": "medtodo",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "vue-vite"
-}
