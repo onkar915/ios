@@ -1,0 +1,7 @@
+{
+  "name": "medicine-tracker",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
